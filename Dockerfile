@@ -9,9 +9,15 @@ COPY deploy-container/settings.json .local/share/code-server/User/settings.json
 # Use bash shell
 ENV SHELL=/bin/bash
 
-# Install unzip + rclone (support for remote filesystem)
-RUN sudo apt-get update && sudo apt-get install unzip -y
+# Install unzip + rclone + go (support for remote filesystem)
+RUN sudo apt-get update && sudo apt-get install unzip -y && sudo apt-get install golang -y
 RUN curl https://rclone.org/install.sh | sudo bash
+
+# go env
+ENV GOROOT=/usr/lib/go        
+ENV PATH=$PATH:/usr/lib/go/bin 
+ENV GOPATH=/root/go
+ENV PATH=$GOPATH/bin/:$PATH
 
 # Copy rclone tasks to /tmp, to potentially be used
 COPY deploy-container/rclone-tasks.json /tmp/rclone-tasks.json
